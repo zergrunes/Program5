@@ -6,20 +6,20 @@ import pandas as pd
 import numpy as np
 import sqlite3 as sql
 import csv
-with open('scores.csv', 'r') as fin:
+with open('grades.csv', 'r') as fin:
     dr = csv.DictReader(fin)
     scores = [(i['Name'], i['Test 1'], i['Test 2'],
-               i['Test 3'], i['Project']) for i in dr]
+               i['Test 3'], i['Project'], i['Grade'], i['Max Score']) for i in dr]
     print(scores)
     fin.close()
 con = sql.connect('sql.db')
 cur = con.cursor()
-'''
+cur.execute("DROP TABLE student")
 cur.execute(
-    'CREATE TABLE student(Name text, Test1 int, Test2 int, Test3 int, Project int)') '''
+    'CREATE TABLE student(Name text, Test1 int, Test2 int, Test3 int, Project int, Grade char, MaxScore int)')
 cur.executemany(
-    'INSERT INTO student VALUES(?,?,?,?,?)', scores)
-x = cur.execute('select * from student')
+    'INSERT INTO student VALUES(?,?,?,?,?,?,?)', scores)
+cur.execute('select * from student')
 con.commit()
 
 with open('profiles.csv', 'r') as f:
@@ -29,7 +29,9 @@ with open('profiles.csv', 'r') as f:
     f.close()
 #cur.execute('CREATE TABLE student_info(name text, gpa float, major text)')
 cur.executemany('INSERT INTO student_info VALUES(?,?,?)', profile)
-y = cur.execute('select * from student_info')
+cur.execute('select * from student_info')
 con.commit()
 
 print('\n Fetching student information...')
+info = cur.execute("SELECT Name,Grade FROM student;")
+print(info)
