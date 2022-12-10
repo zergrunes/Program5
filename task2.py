@@ -27,7 +27,7 @@ def main():
     for name in name_list:
         gpa = random.uniform(2.0, 4.0)
         major = random.choice(major_list)
-        line = f'{name}.{gpa:.1f},{major}'
+        line = f'{name},{gpa:.1f},{major}'
         print(line, file=out)
         print(line)
     out.close()
