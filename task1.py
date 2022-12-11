@@ -8,7 +8,6 @@ import sqlite3 as sql
 import numpy as np
 
 scores = pd.read_csv('scores.csv')  # uploading scores.csv
-#scores['Max Point'] = pd.Series([100 for x in range(len(scores.index))])
 scores = scores.fillna(0)
 print(scores)
 weightings = pd.Series(
@@ -31,12 +30,6 @@ def grade_mapping(value):
             return letter
 
 
-'''
-n_exams = 3
-for n in range(1, n_exams + 1):
-    scores[f"Test {n} Score"] = (
-        scores[f"Test {n}"]/scores[f"Test {n} - Max Point"])
-'''
 scores["Grade"] = (scores[weightings.index]*weightings).sum(axis=1)
 scores['Max Score'] = np.ceil(scores['Grade'])
 letter_grade = scores["Max Score"].map(grade_mapping)
